@@ -171,9 +171,9 @@ box-shadow:0px 2px 6px rgba(0,0,0,0.08);
 width:65%;
 ">
 
-<h4 style="text-align:center; margin-bottom:0px;">Tabla 1</h4>
+<h4 style="text-align:center; margin-bottom:0px;">Pronósticos del Flujo de Remesas</h4>
 <p style="text-align:center; color:gray; margin-top:3px;">
-<i>Pronóstico del flujo de remesas</i>
+<i>Modelo SARIMA</i>
 </p>
 
 <table style="width:100%; border-collapse: collapse; font-size:15px; text-align:center;">
@@ -267,6 +267,75 @@ it1, it2, it3 = st.columns(3)
 with it1: st.markdown(f'<div class="interpretation-card"><b>Ventaja:</b><br>{v}</div>', unsafe_allow_html=True)
 with it2: st.markdown(f'<div class="interpretation-card"><b>Desventaja:</b><br>{d}</div>', unsafe_allow_html=True)
 with it3: st.markdown(f'<div class="interpretation-card"><b>Comportamiento:</b><br>{c}</div>', unsafe_allow_html=True)
+
+# --- GRÁFICA COMPARATIVA DE TODOS LOS MODELOS ---
+st.markdown("---")
+st.subheader("Comparación Global de Modelos")
+
+y = df_2024['Divisas'].values
+x = df_2024['Fecha']
+
+# --- 1. Datos Originales (Regresión lineal) ---
+reg = LinearRegression().fit(np.arange(len(y)).reshape(-1,1), y)
+pred_reg = reg.predict(np.arange(len(y)).reshape(-1,1))
+
+# --- 2. Promedios Móviles ---
+pm = np.convolve(y, np.ones(3)/3, mode='valid')
+pm_c = np.convolve(pm, np.ones(2)/2, mode='valid')
+pm_full = np.concatenate([np.full(3, np.nan), pm_c])
+
+# --- 3. Holt-Winters ---
+hw = ExponentialSmoothing(y, trend="add", seasonal="multiplicative", seasonal_periods=12).fit()
+pred_hw = hw.fittedvalues
+
+# --- 4. Desestacionalización ---
+y_ts = pd.Series(y, index=pd.date_range(start='2002-01-01', periods=len(y), freq='M'))
+des = y / seasonal_decompose(y_ts, model='multiplicative', period=12).seasonal.values
+
+# --- FIGURA COMPARATIVA ---
+fig_combo = go.Figure()
+
+fig_combo.add_trace(go.Scatter(
+    x=x, y=y,
+    name="Divisas Real",
+    line=dict(width=4, color="#1f77b4")
+))
+
+fig_combo.add_trace(go.Scatter(
+    x=x, y=pred_reg,
+    name="Pronostico_DatosO",
+    line=dict(width=3, color="#00BCD4")
+))
+
+fig_combo.add_trace(go.Scatter(
+    x=x, y=pm_full,
+    name="Pronostico_PM",
+    line=dict(width=3, color="#2ecc71")
+))
+
+fig_combo.add_trace(go.Scatter(
+    x=x, y=pred_hw,
+    name="Pronostico_HW",
+    line=dict(width=3, color="#9C27B0")
+))
+
+fig_combo.add_trace(go.Scatter(
+    x=x, y=des,
+    name="Pronostico_Des",
+    line=dict(width=3, color="#4CAF50")
+))
+
+fig_combo.update_layout(
+    title="Datos Reales vrs. Pronósticos",
+    template="plotly_white",
+    legend=dict(orientation="h", y=-0.2),
+    xaxis_title="Mes",
+    yaxis_title="Millones USD"
+)
+
+st.plotly_chart(fig_combo, use_container_width=True)
+
+
 
 # --- SECCIÓN 3: PRONÓSTICO FINAL ---
 st.markdown("---")
