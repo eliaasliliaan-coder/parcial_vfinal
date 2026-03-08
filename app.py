@@ -25,12 +25,16 @@ st.markdown("""
     .sidebar-title { color: white !important; font-size: 24px; font-weight: bold; margin-bottom: 20px; }
 
     .stButton>button {
-        color: black;
-        background-color: #FFFFFF;
+        color: white;
+        background-color: #0B005E;
         border-radius: 5px;
         font-weight: bold;
         text-align: center;
     }
+
+    .model-buttons button:hover {
+        background-color: #e0e0e0 !important; /* hover gris claro */
+}        
 
     .metric-container {
         background: linear-gradient(135deg, #004A99 0%, #002D62 100%);
@@ -97,23 +101,36 @@ except Exception as e:
 # --- SIDEBAR ---
 with st.sidebar:
     st.markdown('<p class="sidebar-title">Filtros</p>', unsafe_allow_html=True)
-    y_range = st.slider("Rango de Años Histórico", 2002, 2026, (2002, 2026))
     
-    st.write("### Selección de Meses")
-    lista_meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+    # Slider de años
+    y_range = st.slider("Comportamiento Histórico - Años", 2002, 2026, (2002, 2026))
+    
+    st.write("#### Selección de Meses")
+    lista_meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+                   "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
 
+    # Inicializar sesión si no existe
+    if 'ms' not in st.session_state:
+        st.session_state.ms = lista_meses.copy()
 
+    # Botones para seleccionar/deseleccionar todos
     c_all, c_none = st.columns(2)
-    if c_all.button("Seleccionar Todo"): st.session_state.ms = lista_meses.copy()
-    if c_none.button("Deseleccionar Todo"): st.session_state.ms = []
-    
-    if 'ms' not in st.session_state: st.session_state.ms = lista_meses.copy()
-    
+    if c_all.button("Seleccionar Todo"):
+        st.session_state.ms = lista_meses.copy()
+    if c_none.button("Deseleccionar Todo"):
+        st.session_state.ms = []
+
+    # Crear checkboxes para cada mes
     m_final = [m for m in lista_meses if st.checkbox(m, value=(m in st.session_state.ms))]
     st.session_state.ms = m_final
 
+    # Mensaje cuando no hay selección
+    if not m_final:
+        st.info("Selecciona un mes para continuar")
+
     st.markdown("<br><br>" * 4, unsafe_allow_html=True)
     st.markdown("---")
+    
     st.write("**Autores**")
     st.markdown("""
     1. Lilian María Elías Reyes
@@ -159,9 +176,9 @@ x_t = np.arange(len(df_h)).reshape(-1, 1)
 reg_h = LinearRegression().fit(x_t, df_h['Divisas'])
 fig1 = go.Figure()
 # CAMBIO: Color gris pálido y línea punteada para datos reales
-fig1.add_trace(go.Scatter(x=df_h['Fecha'], y=df_h['Divisas'], name="Divisas Reales", line=dict(color='#D3D3D3', width=2, dash='dot')))
-fig1.add_trace(go.Scatter(x=df_h['Fecha'], y=reg_h.predict(x_t), name="Tendencia", line=dict(color='#FFD600')))
-fig1.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+fig1.add_trace(go.Scatter(x=df_h['Fecha'], y=df_h['Divisas'], name="Divisas Reales", line=dict(color='#D3D3D3', dash='dot', width=2)))
+fig1.add_trace(go.Scatter(x=df_h['Fecha'], y=reg_h.predict(x_t), name="Tendencia", line=dict(color='#FFE100', width=2.5)))
+fig1.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', xaxis_title="Año", yaxis_title="Millones de USD", height=700)
 st.plotly_chart(fig1, use_container_width=True)
 
 # --- SECCIÓN SARIMA ---
@@ -260,7 +277,8 @@ with col_grafica:
         x=df_2024["Fecha"],
         y=df_2024["Divisas"],
         mode="lines",
-        name="Histórico"
+        name="Histórico",
+        line=dict(dash= "dot", color="#D3D3D3"),
     ))
 
     # pronóstico
@@ -269,7 +287,8 @@ with col_grafica:
         y=df_forecast["Divisas"],
         mode="lines+markers",
         name="Pronóstico 2024-2025",
-        line=dict(dash="dash")
+        line=dict(color="#2EC7FF"),
+
     ))
 
     fig.update_layout(
@@ -323,11 +342,11 @@ if mod == "PM":
     fig2.add_trace(go.Scatter(x=df_2024['Fecha'], y=y24, name="Real", line=dict(color="#D3D3D3", width=1.5, dash='dot')))
     pm = pd.Series(y24).rolling(3).mean()
     pm_c = pm.rolling(2).mean().dropna()
-    fig2.add_trace(go.Scatter(x=df_2024['Fecha'].iloc[-len(pm_c):], y=pm_c, name="Ajuste PM", line=dict(color="#00E676", width=2.5)))
+    fig2.add_trace(go.Scatter(x=df_2024['Fecha'].iloc[-len(pm_c):], y=pm_c, name="Ajuste PM", line=dict(color="#00E878", width=2.5)))
     f_pm = [1261.43, 1266.38, 1271.33, 1276.29,
             1281.24, 1286.19, 1291.14, 1296.09,
             1301.05, 1306.00, 1310.95, 1315.90]
-    fig2.add_trace(go.Scatter(x=f_dates_24, y=f_pm, name="Pronóstico PM", line=dict(color="#00E676", dash="dash", width=3)))
+    fig2.add_trace(go.Scatter(x=f_dates_24, y=f_pm, name="Pronóstico PM", line=dict(color="#00733C", width=2)))
     v, d, c = (
         "Suaviza fluctuaciones aleatorias y el ruido de la serie.",
         "Presenta un rezago respecto a la tendencia actual.",
@@ -357,7 +376,7 @@ elif mod == "Des":
     f_des = [1103.59, 1112.43, 1316.00, 1298.88,
              1395.23, 1363.98, 1348.66, 1379.16,
              1295.11, 1381.73, 1224.59, 1342.97]
-    fig2.add_trace(go.Scatter(x=f_dates_24, y=f_des, name="Pronóstico Desestacionalizado", line=dict(color="#FF4081", dash="dash", width=3)))
+    fig2.add_trace(go.Scatter(x=f_dates_24, y=f_des, name="Pronóstico Desestacionalizado", line=dict(color="#C90043", width=3)))
     v, d, c = (
         "Identifica crecimiento subyacente sin ruido mensual.",
         "No es un modelo predictivo, es una técnica de análisis.",
@@ -369,7 +388,22 @@ elif mod == "Originales":
     fig2.add_trace(go.Scatter(x=df_2024['Fecha'], y=y24, name="Real", line=dict(color="#D3D3D3", width=1.5, dash='dot')))
     reg = LinearRegression().fit(np.arange(len(y24)).reshape(-1,1), y24)
     f_orig = reg.predict(np.arange(len(y24), len(y24)+12).reshape(-1,1))
-    fig2.add_trace(go.Scatter(x=f_dates_24, y=f_orig, name="Lineal", line=dict(color="#FFAB40", width=3)))
+    fig2.add_trace(go.Scatter(
+    x=np.concatenate([df_2024['Fecha'], f_dates_24]), 
+    y=np.concatenate([reg.predict(np.arange(len(y24)).reshape(-1,1)), f_orig]),
+    name="Tendencia",
+    line=dict(color="#FFAB40", width=2)
+))
+    
+    # Marcadores destacados para los 12 meses futuros
+    fig2.add_trace(go.Scatter(
+        x=f_dates_24,
+        y=f_orig,
+        name="Pronóstico Futuros",
+        mode="markers",
+        marker=dict(color="#FF8400", size=8, symbol="circle")
+    ))
+
     v, d, c = (
         "Simplicidad y fácil interpretación.",
         "Ignora ciclos estacionales.",
@@ -385,7 +419,7 @@ elif mod == "Comparativa":
     f_des = [1103.59, 1112.43, 1316.00, 1298.88, 1395.23, 1363.98, 1348.66, 1379.16, 1295.11, 1381.73, 1224.59, 1342.97]
 
     pronosticos = {"SARIMA": f_sarima, "Datos Originales": f_originales, "Promedios Móviles": f_pm, "Holt-Winters": f_hw, "Desestacionalización": f_des}
-    colores = {"SARIMA": "#00285E", "Datos Originales": "#FFAB40", "Promedios Móviles": "#00E676", "Holt-Winters": "#AA00FF", "Desestacionalización": "#FF4081"}
+    colores = {"SARIMA": "#00285E", "Datos Originales": "#FF8400", "Promedios Móviles": "#00733C", "Holt-Winters": "#AA00FF", "Desestacionalización": "#C90043"}
     estilos = {"SARIMA": "solid", "Datos Originales": "solid", "Promedios Móviles": "dash", "Holt-Winters": "solid", "Desestacionalización": "dash"}
 
     fig2 = go.Figure()
@@ -500,7 +534,7 @@ with col_graf:
     fig3 = go.Figure()
     # Histórico en naranja/dorado
     fig3.add_trace(go.Scatter(x=df_2026['Fecha'], y=df_2026['Divisas'], 
-                              name="Histórico Real", line=dict(color='#070096', width=2)))
+                              name="Histórico Real", line=dict(color='#D3D3D3', width=2, dash='dot')))
     # Pronóstico en verde limón
     fig3.add_trace(go.Scatter(x=f_idx, y=forecast_f, 
                               name="Pronóstico Feb 26 - Ene 27", line=dict(color="#b5ff3c", width=4)))
