@@ -159,20 +159,24 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- TABLA PRONÓSTICO SARIMA (ESTILO PROFESIONAL) ---
+# --- TABLA PRONÓSTICO SARIMA CENTRADA ---
 st.markdown("""
+<div style="display:flex; justify-content:center; margin-top:25px;">
+
 <div style="
 background-color:#f7f9fc;
-padding:20px;
+padding:25px;
 border-radius:10px;
 box-shadow:0px 2px 6px rgba(0,0,0,0.08);
-margin-top:20px;
+width:65%;
 ">
 
-<h4 style="margin-bottom:0px;">Tabla 1</h4>
-<p style="margin-top:2px; color:gray;"><i>Pronóstico del flujo de remesas</i></p>
+<h4 style="text-align:center; margin-bottom:0px;">Tabla 1</h4>
+<p style="text-align:center; color:gray; margin-top:3px;">
+<i>Pronóstico del flujo de remesas</i>
+</p>
 
-<table style="width:100%; border-collapse: collapse; font-size:15px;">
+<table style="width:100%; border-collapse: collapse; font-size:15px; text-align:center;">
 <thead>
 <tr style="background-color:#e9eef6;">
 <th style="padding:10px; border-bottom:2px solid #d0d7e2;">Mes-año</th>
@@ -197,8 +201,9 @@ margin-top:20px;
 
 </table>
 </div>
-""", unsafe_allow_html=True) 
 
+</div>
+""", unsafe_allow_html=True)
 
 # --- RMSE ---
 st.markdown("---")
