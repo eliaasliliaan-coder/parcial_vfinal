@@ -131,7 +131,7 @@ st.markdown("""
     <b>Contexto del Proyecto:</b><br>
     Las remesas familiares se han convertido en un pilar de la economía guatemalteca, representando una fuente clave de divisas y de ingreso para millones de hogares. Su comportamiento refleja tanto las dinámicas 
     migratorias como factores externos, por lo que es importante analizar su evolución en el tiempo. Este estudio analiza la serie de remesas utilizando datos de 2002 a 2024 para estimar modelos econométricos y una 
-    extensión hasta 2026 para evaluar pronósticos, comparando distintos modelos mediante el RMSE y proyectando valores de abril 2025 a marzo 2026.
+    extensión hasta 2026 para evaluar pronósticos, comparando distintos modelos mediante el RMSE y proyectando valores de febrero 2026 a enero 2027.
 </div>
 """, unsafe_allow_html=True)
 
@@ -158,6 +158,47 @@ st.markdown("""
     <b>Comportamiento:</b> Ha demostrado ser el modelo con mayor fidelidad en este estudio, adaptándose mejor que cualquier otro a los choques estacionales históricos de la economía guatemalteca.
 </div>
 """, unsafe_allow_html=True)
+
+# --- TABLA PRONÓSTICO SARIMA (ESTILO PROFESIONAL) ---
+st.markdown("""
+<div style="
+background-color:#f7f9fc;
+padding:20px;
+border-radius:10px;
+box-shadow:0px 2px 6px rgba(0,0,0,0.08);
+margin-top:20px;
+">
+
+<h4 style="margin-bottom:0px;">Tabla 1</h4>
+<p style="margin-top:2px; color:gray;"><i>Pronóstico del flujo de remesas</i></p>
+
+<table style="width:100%; border-collapse: collapse; font-size:15px;">
+<thead>
+<tr style="background-color:#e9eef6;">
+<th style="padding:10px; border-bottom:2px solid #d0d7e2;">Mes-año</th>
+<th style="padding:10px; border-bottom:2px solid #d0d7e2;">Flujo de Remesas Familiares (millones USD)</th>
+</tr>
+</thead>
+
+<tbody>
+<tr><td style="padding:8px; border-bottom:1px solid #e1e5eb;">abr-24</td><td style="padding:8px; border-bottom:1px solid #e1e5eb;">1,725.19</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid #e1e5eb;">may-24</td><td style="padding:8px; border-bottom:1px solid #e1e5eb;">1,868.50</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid #e1e5eb;">jun-24</td><td style="padding:8px; border-bottom:1px solid #e1e5eb;">1,887.65</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid #e1e5eb;">jul-24</td><td style="padding:8px; border-bottom:1px solid #e1e5eb;">1,840.73</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid #e1e5eb;">ago-24</td><td style="padding:8px; border-bottom:1px solid #e1e5eb;">1,902.59</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid #e1e5eb;">sept-24</td><td style="padding:8px; border-bottom:1px solid #e1e5eb;">1,799.99</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid #e1e5eb;">oct-24</td><td style="padding:8px; border-bottom:1px solid #e1e5eb;">1,879.96</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid #e1e5eb;">nov-24</td><td style="padding:8px; border-bottom:1px solid #e1e5eb;">1,731.84</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid #e1e5eb;">dic-24</td><td style="padding:8px; border-bottom:1px solid #e1e5eb;">1,905.96</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid #e1e5eb;">ene-25</td><td style="padding:8px; border-bottom:1px solid #e1e5eb;">1,619.98</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid #e1e5eb;">feb-25</td><td style="padding:8px; border-bottom:1px solid #e1e5eb;">1,674.07</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid #e1e5eb;">mar-25</td><td style="padding:8px; border-bottom:1px solid #e1e5eb;">1,930.56</td></tr>
+</tbody>
+
+</table>
+</div>
+""", unsafe_allow_html=True) 
+
 
 # --- RMSE ---
 st.markdown("---")
