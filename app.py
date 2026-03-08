@@ -129,11 +129,11 @@ st.title("Del Dato al Futuro: Validación econométrica de metodologías para pr
 st.markdown("""
 <div class="context-box">
     <b>Contexto del Proyecto:</b><br>
-    Las remesas familiares se han consolidado como uno de los componentes más relevantes dentro de la economía guatemalteca. Durante las últimas décadas, estos flujos de dinero enviados principalmente por migrantes han mostrado un crecimiento sostenido, convirtiéndose en una fuente fundamental de divisas y en un ingreso clave para millones de hogares. Este fenómeno refleja no solo las dinámicas migratorias del país, sino también la importancia de estos recursos para el consumo, el bienestar económico y la estabilidad financiera de muchas familias.
-Al mismo tiempo, la creciente participación de las remesas dentro de la economía nacional evidencia su influencia en la actividad económica y en el comportamiento de diversos indicadores macroeconómicos. Sin embargo, el desempeño de estos flujos también puede estar condicionado por factores externos, como las condiciones del mercado laboral internacional o los cambios en los procesos migratorios, lo que hace relevante analizar su comportamiento a lo largo del tiempo.
-En este contexto, comprender la dinámica temporal de las remesas resulta fundamental para identificar patrones de tendencia y estacionalidad que permitan anticipar su evolución futura.<br><br>
-Para el desarrollo de este estudio se utilizaron dos bases de datos estructuradas: una correspondiente al período 2002 al 2024, utilizada para la estimación de los modelos econométricos, y una segunda base que extiende la serie hasta 2002 a 2026, empleada para contrastar y evaluar el comportamiento de los pronósticos obtenidos.
-A partir de estas bases se realizará la exploración de la serie de tiempo, el cálculo de distintos modelos de pronóstico, la comparación de sus resultados mediante el RMSE y finalmente la proyección de las remesas para el período abril 2025  a marzo 2026, con el objetivo de evaluar la capacidad predictiva de las metodologías utilizadas..
+    Las remesas familiares se han convertido en un pilar de la economía guatemalteca, representando una fuente clave de divisas y de ingreso para millones de hogares. Su comportamiento refleja tanto las dinámicas 
+    migratorias como factores externos, por lo que es importante analizar su evolución en el tiempo.
+    
+    Este estudio analiza la serie de remesas utilizando datos de 2002 a 2024 para estimar modelos econométricos y una extensión hasta 2026 para evaluar pronósticos, comparando distintos modelos mediante el RMSE 
+    y proyectando valores de abril 2025 a marzo 2026.
 </div>
 """, unsafe_allow_html=True)
 
