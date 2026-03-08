@@ -6,7 +6,6 @@ from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from statsmodels.tsa.seasonal import seasonal_decompose
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
-from statsmodels.tsa.statespace.sarimax import SARIMAX
 
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(page_title="Validación Econométrica - Remesas", layout="wide")
@@ -268,85 +267,6 @@ it1, it2, it3 = st.columns(3)
 with it1: st.markdown(f'<div class="interpretation-card"><b>Ventaja:</b><br>{v}</div>', unsafe_allow_html=True)
 with it2: st.markdown(f'<div class="interpretation-card"><b>Desventaja:</b><br>{d}</div>', unsafe_allow_html=True)
 with it3: st.markdown(f'<div class="interpretation-card"><b>Comportamiento:</b><br>{c}</div>', unsafe_allow_html=True)
-
-# --- COMPARACIÓN GLOBAL DE MODELOS (INCLUYE SARIMA) ---
-st.markdown("---")
-st.header("Comparación Global de Pronósticos")
-
-y = df_2024['Divisas'].values
-x_real = df_2024['Fecha']
-
-# Fechas de forecast
-f_dates = pd.date_range(start=x_real.iloc[-1] + pd.DateOffset(months=1), periods=12, freq='MS')
-
-# --- 1 Regresión Lineal (Datos Originales)
-reg = LinearRegression().fit(np.arange(len(y)).reshape(-1,1), y)
-f_reg = reg.predict(np.arange(len(y), len(y)+12).reshape(-1,1))
-
-# --- 2 Promedios Móviles
-pm = np.convolve(y, np.ones(3)/3, mode='valid')
-pm_c = np.convolve(pm, np.ones(2)/2, mode='valid')
-reg_pm = LinearRegression().fit(np.arange(len(pm_c)).reshape(-1,1), pm_c)
-f_pm = reg_pm.predict(np.arange(len(pm_c), len(pm_c)+12).reshape(-1,1))
-
-# --- 3 Holt Winters
-hw = ExponentialSmoothing(
-    y,
-    trend="add",
-    seasonal="multiplicative",
-    seasonal_periods=12
-).fit()
-
-f_hw = hw.forecast(12)
-
-# --- 4 Desestacionalización
-y_ts = pd.Series(y, index=pd.date_range(start='2002-01-01', periods=len(y), freq='M'))
-des = y / seasonal_decompose(y_ts, model='multiplicative', period=12).seasonal.values
-reg_des = LinearRegression().fit(np.arange(len(des)).reshape(-1,1), des)
-f_des = reg_des.predict(np.arange(len(des), len(des)+12).reshape(-1,1))
-
-# --- 5 SARIMA (si ya lo tienes entrenado en tu app usa ese)
-sarima_model = SARIMAX(y, order=(1,1,1), seasonal_order=(1,1,1,12)).fit(disp=False)
-f_sarima = sarima_model.forecast(12)
-
-# --- FIGURA
-fig = go.Figure()
-
-# HISTÓRICO
-fig.add_trace(go.Scatter(
-    x=x_real,
-    y=y,
-    name="Divisas Real",
-    line=dict(color="#1f77b4", width=4)
-))
-
-# PRONÓSTICOS
-fig.add_trace(go.Scatter(x=f_dates, y=f_reg, name="Pronostico_DatosO", line=dict(width=3)))
-fig.add_trace(go.Scatter(x=f_dates, y=f_pm, name="Pronostico_PM", line=dict(width=3)))
-fig.add_trace(go.Scatter(x=f_dates, y=f_hw, name="Pronostico_HW", line=dict(width=3)))
-fig.add_trace(go.Scatter(x=f_dates, y=f_des, name="Pronostico_Des", line=dict(width=3)))
-fig.add_trace(go.Scatter(x=f_dates, y=f_sarima, name="Pronostico_SARIMA", line=dict(width=4, dash="dash")))
-
-# ZONA DE FORECAST
-fig.add_vrect(
-    x0=f_dates[0],
-    x1=f_dates[-1],
-    fillcolor="gray",
-    opacity=0.15,
-    layer="below",
-    line_width=0
-)
-
-fig.update_layout(
-    title="Datos Reales vs Pronósticos de Modelos",
-    template="plotly_dark",
-    legend=dict(orientation="h", y=-0.2),
-    xaxis_title="Fecha",
-    yaxis_title="Millones USD"
-)
-
-st.plotly_chart(fig, use_container_width=True)
-
 
 
 # --- SECCIÓN 3: PRONÓSTICO FINAL ---
