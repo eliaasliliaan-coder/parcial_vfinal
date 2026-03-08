@@ -6,6 +6,7 @@ from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from statsmodels.tsa.seasonal import seasonal_decompose
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
+from statsmodels.tsa.statespace.sarimax import SARIMAX
 
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(page_title="Validación Econométrica - Remesas", layout="wide")
